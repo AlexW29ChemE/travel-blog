@@ -1,0 +1,53 @@
+/* styles/TravelEntries.module.css */
+.entriesList {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .entry {
+    background-color: rgb(var(--tile-start-rgb));
+    padding: 20px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--secondary-glow);
+  }
+  
+  .entry h2 {
+    margin-bottom: 10px;
+  }
+  
+  .entry p {
+    margin: 5px 0;
+  }
+  
+  .actions {
+    margin-top: 10px;
+  }
+  
+  .editButton {
+    background-color: #0071ff;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  
+  .editButton:hover {
+    background-color: #005bb5;
+  }
+  
+  .deleteButton {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+  }
+  
+  .deleteButton:hover {
+    background-color: #cc0000;
+  }
+  
