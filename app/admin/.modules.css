@@ -126,3 +126,7 @@
     margin-bottom: 5px;
     font-weight: bold;
   }
+.error-text{
+padding: var(--spacing);
+color:var(--error)
+}

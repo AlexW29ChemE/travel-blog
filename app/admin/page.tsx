@@ -9,7 +9,15 @@ async function getBlogs() {
 
 export default async function dashboard() {
   const entries = await getBlogs();
-  console.log(entries[0]);
+  console.log(entries);
+
+if (entries.length===0){
+ return  <div>
+    <h1>Travel Entries</h1>
+    <p className="error-text">No Entries found</p>
+  </div>
+}
+
   return (
     <div>
       <h1>Travel Entries</h1>

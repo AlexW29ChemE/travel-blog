@@ -7,7 +7,7 @@ export default function BlogEntrySnippet({ blog }: BlogEntrySnippet) {
   const { title, thumbnail, description, date, id } = blog;
 
   return (
-    <div>
+    <div className="blog-card">
       <Link href={`/travel/${id}`}>
         <div>
           {thumbnail?.key ? (
