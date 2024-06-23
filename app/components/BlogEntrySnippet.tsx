@@ -22,7 +22,7 @@ export default function BlogEntrySnippet({ blog }: BlogEntrySnippet) {
         <div>
           <h2>{title}</h2>
           <p>{description}</p>
-          <p>{date.toLocaleDateString()}</p>
+          <p className="date">{date.toLocaleDateString()}</p>
         </div>
       </Link>
     </div>

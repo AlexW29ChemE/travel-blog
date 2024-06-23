@@ -14,15 +14,22 @@
     "@types/react": "18.2.8",
     "@types/react-dom": "18.0.10",
     "axios": "^1.7.2",
+    "classnames": "^2.5.1",
+    "fslightbox-react": "^1.7.6",
     "mime-types": "^2.1.35",
     "mongoose": "^8.4.1",
     "next": "latest",
+    "next-auth": "^5.0.0-beta.19",
     "next-mdx-remote": "^5.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "typescript": "^5.4.5"
   },
   "devDependencies": {
-    "@types/mime-types": "^2.1.4"
+    "@types/fslightbox-react": "^1.7.7",
+    "@types/mime-types": "^2.1.4",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.4"
   }
 }

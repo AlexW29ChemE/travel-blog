@@ -5,9 +5,10 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { randomUUID } from "crypto";
 import mime from "mime-types";
 import { NextResponse } from "next/server";
+import { isDev } from "../../constants";
 
 type FileMeta = { name: string; mimeType: string; size: number };
-const TRAVEL_IMAGES_FOLDER = "travel-images";
+const TRAVEL_IMAGES_FOLDER = isDev()?"test-Images":"travel-images";
 /**
  * 1. Client will send the mimetype in request body
  * 2. Server sends back a pre-signed PutObject S3 request

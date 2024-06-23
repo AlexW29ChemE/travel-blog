@@ -4,6 +4,7 @@ import { useState } from "react";
 import axios from "axios";
 import { Blog } from "../model/types";
 import { useRouter } from "next/navigation";
+import { getImageUrl } from "../model/image";
 
 type BlogFormProps = {
   blog?: Blog; // Make blog prop optional for initialization
@@ -11,6 +12,7 @@ type BlogFormProps = {
 const BlogForm: React.FC<BlogFormProps> = ({ blog }) => {
   const router = useRouter();
   const [title, setTitle] = useState(blog?.title || "");
+  const [description, setDescription] = useState(blog?.description || "");
   const [locationName, setLocationName] = useState(blog?.location?.name || "");
   const [latitude, setLatitude] = useState<number | undefined>(
     blog?.location?.latitude ?? 0
@@ -80,7 +82,7 @@ const BlogForm: React.FC<BlogFormProps> = ({ blog }) => {
     // Prepare blog object
     const newBlog: Partial<Blog> = {
       ...blog,
-      title,
+      title,description,
       date: new Date(date),
       markdownContent: content,
       location: {
@@ -163,6 +165,17 @@ const BlogForm: React.FC<BlogFormProps> = ({ blog }) => {
           placeholder="Title"
         />
       </div>
+      <div className="form-group">
+        <label htmlFor="description">Short Description</label>
+        <input
+          type="text"
+          id="description"
+          required
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Description"
+        />
+      </div>
       <div className="detailed-location">
         <div className="form-group">
           <label htmlFor="locationName">Location Name</label>
@@ -243,7 +256,7 @@ const BlogForm: React.FC<BlogFormProps> = ({ blog }) => {
               return (
                 <img
                   key={image.key}
-                  src={`${process.env.NEXT_PUBLIC_IMAGE_BUCKET_HOST}/${image.key}`}
+                  src={getImageUrl(image)}
                   className="image-preview"
                 />
               );

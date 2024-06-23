@@ -1,19 +1,13 @@
 import CommentsContainer from "../../components/CommentContainer";
 import GoogleMap from "../../components/GoogleMap";
 import MarkdownContent from "../../components/MarkdownContent";
-import db from "../../model/db";
-
-async function getBlog(id: string) {
-  console.log(id);
-  const blog = await db.Blog.findById(id);
-  return blog?.toObject();
-}
+import { getPostById } from "../../controller/blog";
 
 type BlogEntryProps = { params: { blogId: string } };
 
 async function BlogEntryPage({ params }: BlogEntryProps) {
   const { blogId } = params;
-  const blog = await getBlog(blogId);
+  const blog = await getPostById(blogId);
   console.log(blog);
   if (!blog) {
     return <div>Not Found</div>;

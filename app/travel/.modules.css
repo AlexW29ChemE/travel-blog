@@ -41,16 +41,48 @@
     display: grid;
     background: var(--secondary-accent);
     padding: calc(1*var(--spacing));
-    grid-template-columns: repeat(auto-fill, minmax(200px, 3fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     border-radius: var(--border-radius);
     border: solid 1px var(--border);
     gap: calc(2*var(--spacing));
 }
 
+/* Responsive Design */
+@media (min-width: 600px) {
+    .travelBlog-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns on medium screens */
+    }
+}
+
+
 .blog-card {
     padding: var(--spacing);
     border-radius: var(--border-radius);
-    background: linear-gradient(to bottom right, orange, red);
-    height: 250px;
+    background: var(--background);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+    cursor: pointer;
+    text-align: center;
 }
+
+.blog-card:hover {
+    transform: translateY(-3px);
+}
+
+.blog-card img {
+    width: 100%;
+    border-radius: var(--border-radius);
+    object-fit: cover;
+}
+
+.blog-card h2 {
+    font-size: 1.25rem;
+    color: var(--primary-color);
+    margin: 0.5rem 0;
+}
+
+.blog-card p {
+    color: var(--secondary-color);
+    margin: 0.5rem 0;
+}
+

@@ -1,7 +1,8 @@
 // pages/api/comments/index.js
 
 import { NextResponse } from "next/server";
-import db from "../../../../model/db";
+import db from "../../../model/db";
+import { Comment } from "../../../model/types";
 
 export async function GET(
   request: Request,
@@ -13,6 +14,8 @@ export async function GET(
 }
 
 export async function POST(request: Request) {
-  const comment = await db.Comment.create(request.body);
+  const commentData: Comment = await request.json();
+
+  const comment = await db.Comment.create(commentData);
   return NextResponse.json(comment, { status: 201 });
 }
