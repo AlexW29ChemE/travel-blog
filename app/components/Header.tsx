@@ -1,6 +1,8 @@
 import Link from "next/link";
 
 export function Header({ isLoggedIn }:{isLoggedIn?:boolean}) {
+  
+  
   return (
     <header className="bg-neutral-50 border-b border-neutral-200 py-4">
       <div className="container mx-auto flex flex-col lg:flex-row items-center justify-between">

@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
+import { isProduction } from "../constants";
 declare global {
   var mongoose: any; // This must be a `var` and not a `let / const`
 }
 
 const mongoURL =
-  process.env.MONGO_URI || "mongodb://127.0.0.1:27017/travel-blog";
+  isProduction()?process.env.MONGO_URI_PRODUCTION||'':process.env.MONGO_URI || "mongodb://127.0.0.1:27017/travel-blog";
 
 if (!mongoURL) {
   throw new Error(
