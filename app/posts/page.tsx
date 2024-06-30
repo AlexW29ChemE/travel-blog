@@ -10,6 +10,12 @@ import { PostsHeader } from "../components/PostsHeader";
 const Page = async () => {
   const posts = await getRecentPosts();
 
+  if (posts.length===0){
+    return  <div>
+       <h1>Travel Entries</h1>
+       <p className="error-text">No Entries found</p>
+     </div>
+   }
   const heroPost = posts[0];
 
   const morePosts = posts.slice(1);

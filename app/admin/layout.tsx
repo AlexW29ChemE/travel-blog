@@ -15,6 +15,7 @@ import Link from "next/link";
 import "./.modules.css";
 import { SignIn } from "../components/SignIn";
 import { auth } from "../../auth";
+import { isAuthorised } from "../constants";
 
 type Props = { children: React.ReactNode };
 
@@ -23,7 +24,7 @@ type Props = { children: React.ReactNode };
 export default async function AdminLayout({ children }: Props) {
   
   const session  = await auth()
-  if(session?.user?.email !== process.env.ADMIN_EMAIL){
+  if(!isAuthorised(session?.user?.email)){
     return <div><p className="m-8">Your not authorised to view this page! Unless of course you are the Alex and your the owner of the website.</p><div className="m-3"><SignIn/></div></div>
   }
   

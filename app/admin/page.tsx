@@ -33,10 +33,11 @@ if (entries.length===0){
               <Link href={`/admin/edit/${entry.id}`}>
                 <button className="editButton">Edit</button>
               </Link>
+              {entry.published?<button>unpublish</button>:<button>Publish</button>}
             </div>
           </div>
         ))}
       </div>
     </div>
-  );
+  );  
 }

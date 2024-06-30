@@ -5,12 +5,15 @@ import axios from "axios";
 import { Blog } from "../model/types";
 import { useRouter } from "next/navigation";
 import { getImageUrl } from "../model/image";
+import Link from "next/link";
 
 type BlogFormProps = {
   blog?: Blog; // Make blog prop optional for initialization
 };
 const BlogForm: React.FC<BlogFormProps> = ({ blog }) => {
   const router = useRouter();
+
+  // Form Fields
   const [title, setTitle] = useState(blog?.title || "");
   const [description, setDescription] = useState(blog?.description || "");
   const [locationName, setLocationName] = useState(blog?.location?.name || "");
@@ -20,7 +23,6 @@ const BlogForm: React.FC<BlogFormProps> = ({ blog }) => {
   const [longitude, setLongitude] = useState<number | undefined>(
     blog?.location?.longitude ?? 0
   );
-  const [locationError, setLocationError] = useState("");
   const [date, setDate] = useState(
     blog?.date ? new Date(blog.date).toISOString().split("T")[0] : ""
   );
@@ -29,9 +31,16 @@ const BlogForm: React.FC<BlogFormProps> = ({ blog }) => {
   const [images, setImages] = useState<File[] | null>(null);
   const [thumbnail, setThumbnail] = useState<number | null>(null);
 
+  // Errors
+  const [locationError, setLocationError] = useState("");
+  const [error, setError] = useState<Error[]>([]);
+
+  // status
+  const [status, setStatus] = useState<null | "loading" | "success">(null)
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    setStatus('loading')
     // Request Signed URLs for images
     type FileMeta = { name: string; mimeType: string; size: number };
     type ImageUrls = { key: string; url: string };
@@ -52,6 +61,7 @@ const BlogForm: React.FC<BlogFormProps> = ({ blog }) => {
       | null
     )[] = [];
     let hasErrors = false;
+    const errors:Error[] = [];
     const promises = data.map(async ({ key, url }, i) => {
       if (images?.[i]) {
         try {
@@ -67,6 +77,7 @@ const BlogForm: React.FC<BlogFormProps> = ({ blog }) => {
         } catch (error) {
           uploadedImages[i] = null;
           console.error(error);
+          errors.push(error as Error)
           hasErrors = true;
         }
       }
@@ -76,13 +87,15 @@ const BlogForm: React.FC<BlogFormProps> = ({ blog }) => {
 
     if (hasErrors) {
       alert("Error uploading images");
+      setError(errors)
+      setStatus(null)
       return;
     }
 
     // Prepare blog object
     const newBlog: Partial<Blog> = {
       ...blog,
-      title,description,
+      title, description,
       date: new Date(date),
       markdownContent: content,
       location: {
@@ -104,10 +117,14 @@ const BlogForm: React.FC<BlogFormProps> = ({ blog }) => {
         method: blog?.id ? "PUT" : "POST",
         data: newBlog,
       });
+      setStatus('success')
       console.log(blog?.id ? "Updated" : "Posted", " Blog", response.data);
-      router.push("/admin");
+      // router.push("/admin");
     } catch (error) {
       console.error("Error posting blog:", error, newBlog);
+      errors.push(error as Error)
+      setStatus(null)
+      setError(errors)
     }
   };
 
@@ -277,7 +294,9 @@ const BlogForm: React.FC<BlogFormProps> = ({ blog }) => {
           placeholder="Journal content - Private"
         ></textarea>
       </div>
-      <button type="submit">{blog?.id ? "Update" : "Submit"}</button>
+      <button disabled={status==='loading'} type="submit">{blog?.id ?  status=== 'loading' ? "Updating..." : "Update" : status === "loading" ? "Submitting..." : "Submit"}</button>
+      {error ? error.map((err)=><div>{`Error:${err.name}, ${err.message},\n${err.stack}`}</div>): null}
+      {status==='success'?<div>{`Uploaded Post, and ${images?.length??0} images. Return to `}<Link href="/admin">Dashboard</Link></div>:null}
     </form>
   );
 };

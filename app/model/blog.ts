@@ -42,6 +42,8 @@ const blogSchema = new mongoose.Schema(
       type: String,
       select: false,
     },
+    published: Boolean, 
+    deleted: Boolean,
     metadata: {
       type: Map,
       of: String,

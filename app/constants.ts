@@ -7,3 +7,7 @@ export function isDev() {
 export function isBrowser() {
   return window !== undefined;
 }
+
+export function isAuthorised(email?:string|null){
+  return isDev() || email && email === process.env.ADMIN_EMAIL
+}

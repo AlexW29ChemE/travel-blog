@@ -2,7 +2,7 @@ import db from "../model/db";
 
 
 export async function getRecentPosts(limit=1000) {
-  return db.Blog.find().sort({ createdAt: -1 }).limit(limit); // Fetch the 3 most recent blogs
+  return db.Blog.find({published:true}).sort({ createdAt: -1 }).limit(limit); // Fetch the 3 most recent blogs
 }
 
 

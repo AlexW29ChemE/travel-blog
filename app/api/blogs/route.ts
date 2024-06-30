@@ -3,6 +3,7 @@ import db from "../../model/db";
 import axios from "axios";
 import { Blog } from "../../model/types";
 import { auth } from "../../../auth";
+import { isAuthorised } from "../../constants";
 
 
 
@@ -18,7 +19,7 @@ if(request.auth?.user?.email!==process.env.ADMIN_EMAIL){
 
 export const POST = auth(async (request)=> {
   // verify user is authorised
-  if(request.auth?.user?.email!==process.env.ADMIN_EMAIL){
+  if(!isAuthorised(request.auth?.user?.email)){
     return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
   }
 
@@ -35,7 +36,7 @@ export const POST = auth(async (request)=> {
 
 export const PUT =  auth(async (request)=> {
   // verify user is authorised
-  if(request.auth?.user?.email!==process.env.ADMIN_EMAIL){
+  if(!isAuthorised(request.auth?.user?.email)){
     return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
   }
 
