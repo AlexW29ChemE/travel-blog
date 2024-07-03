@@ -11,6 +11,12 @@ const nextConfig = {
         port: '',
         pathname: '/travel-images/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'storage.alexwieringa.com',
+        port: '',
+        pathname: '/test-Images/**',
+      },
     ],
   },
 };

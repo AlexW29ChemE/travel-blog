@@ -106,6 +106,9 @@
   button[type="submit"]:hover {
     background-color: #0056b3;
   }
+  button:disabled {
+    background-color: grey;
+  }
 
   .image-preview, .thumbnail-preview {
     width: 200px;

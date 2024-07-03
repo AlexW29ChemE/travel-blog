@@ -2,6 +2,8 @@ import React from "react";
 import db from "../../model/db";
 import "./dashboard.modules.css";
 import Link from "next/link";
+import PublishButton from "../../components/PublishButton";
+
 
 async function getBlogs() {
   return db.Blog.find().sort({ createdAt: -1 }); // Fetch blogs sorted by most recent
@@ -24,7 +26,8 @@ export default async function dashboard() {
             <div className="actions">
               <Link href={`/admin/edit/${entry.id}`}>
                 <button className="editButton">Edit</button>
-              </Link>
+              </Link>              
+              <PublishButton id={entry.id} published={entry.published}/>
             </div>
           </div>
         ))}

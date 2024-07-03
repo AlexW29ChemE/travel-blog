@@ -2,6 +2,8 @@ import React from "react";
 import db from "../model/db";
 import "./dashboard/dashboard.modules.css";
 import Link from "next/link";
+import axios from "axios";
+import PublishButton from "../components/PublishButton";
 
 async function getBlogs() {
   return db.Blog.find().sort({ date: -1 }); // Fetch blogs sorted by most recent
@@ -9,7 +11,7 @@ async function getBlogs() {
 
 export default async function dashboard() {
   const entries = await getBlogs();
-  console.log(entries);
+  // console.log(entries);
 
 if (entries.length===0){
  return  <div>
@@ -33,7 +35,7 @@ if (entries.length===0){
               <Link href={`/admin/edit/${entry.id}`}>
                 <button className="editButton">Edit</button>
               </Link>
-              {entry.published?<button>unpublish</button>:<button>Publish</button>}
+              <PublishButton id={entry.id} published={entry.published}/>
             </div>
           </div>
         ))}
