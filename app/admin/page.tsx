@@ -9,6 +9,8 @@ async function getBlogs() {
   return db.Blog.find().sort({ date: -1 }); // Fetch blogs sorted by most recent
 }
 
+export const revalidate = 3600
+
 export default async function dashboard() {
   const entries = await getBlogs();
   // console.log(entries);

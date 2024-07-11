@@ -7,6 +7,8 @@ import {  MorePosts } from "../components/MorePosts";
 import { Intro } from "../components/Intro";
 import { PostsHeader } from "../components/PostsHeader";
 
+export const revalidate = 3600
+
 const Page = async () => {
   const posts = await getRecentPosts();
 

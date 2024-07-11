@@ -1,7 +1,7 @@
 import { isDev } from "../constants";
 
 const GoogleMap = ({ location }: { location: string }) => {
-  if (!isDev()) {
+  if (isDev()) {
     return (
       <div
         style={{

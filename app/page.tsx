@@ -6,6 +6,8 @@ import { Intro } from "./components/Intro";
 import { HeroPost } from "./components/HeroPost";
 import {  MorePosts } from "./components/MorePosts";
 
+export const revalidate = 3600
+
 const HomePage = async () => {
   const posts = await getRecentPosts(3);
   const heroPost = posts[0];
