@@ -11,7 +11,7 @@ async function getBlogs() {
 
 export const revalidate = 3600
 
-export default async function dashboard() {
+export default async function Dashboard() {
   const entries = await getBlogs();
   // console.log(entries);
 

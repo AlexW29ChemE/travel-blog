@@ -1,16 +1,26 @@
 import React from "react";
 import db from "../../model/db";
-import "./dashboard.modules.css";
+import "./dashboard/dashboard.modules.css";
 import Link from "next/link";
+import axios from "axios";
 import PublishButton from "../../components/PublishButton";
 
-
 async function getBlogs() {
-  return db.Blog.find().sort({ createdAt: -1 }); // Fetch blogs sorted by most recent
+  return db.Blog.find().sort({ date: -1 }); // Fetch blogs sorted by most recent
 }
 
-export default async function dashboard() {
+export const revalidate = 3600
+
+export default async function Dashboard() {
   const entries = await getBlogs();
+  // console.log(entries);
+
+if (entries.length===0){
+ return  <div>
+    <h1>Travel Entries</h1>
+    <p className="error-text">No Entries found</p>
+  </div>
+}
 
   return (
     <div>
@@ -26,12 +36,12 @@ export default async function dashboard() {
             <div className="actions">
               <Link href={`/admin/edit/${entry.id}`}>
                 <button className="editButton">Edit</button>
-              </Link>              
+              </Link>
               <PublishButton id={entry.id} published={entry.published}/>
             </div>
           </div>
         ))}
       </div>
     </div>
-  );
+  );  
 }

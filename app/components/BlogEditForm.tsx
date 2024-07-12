@@ -36,7 +36,7 @@ const BlogForm: React.FC<BlogFormProps> = ({ blog }) => {
   const [error, setError] = useState<Error[]>([]);
 
   // status
-  const [status, setStatus] = useState<null | "loading" | "success">(null)
+  const [status, setStatus] = useState<null | "loading" | "success"|"partial">(null)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -89,7 +89,7 @@ const BlogForm: React.FC<BlogFormProps> = ({ blog }) => {
       alert("Error uploading images");
       setError(errors)
       setStatus(null)
-      return;
+      // return;
     }
 
     // Prepare blog object
@@ -104,8 +104,8 @@ const BlogForm: React.FC<BlogFormProps> = ({ blog }) => {
         longitude,
       },
       images: [
-        ...uploadedImages.filter((image) => !!image),
         ...(blog?.images || []),
+        ...uploadedImages.filter((image) => !!image)
       ] as any,
       thumbnail: uploadedImages[thumbnail ?? 0],
       privateContent: journalEntry,
@@ -117,7 +117,7 @@ const BlogForm: React.FC<BlogFormProps> = ({ blog }) => {
         method: blog?.id ? "PUT" : "POST",
         data: newBlog,
       });
-      setStatus('success')
+      setStatus(errors.length && uploadedImages.length?'partial':'success')
       console.log(blog?.id ? "Updated" : "Posted", " Blog", response.data);
       // router.push("/admin");
     } catch (error) {
@@ -296,7 +296,7 @@ const BlogForm: React.FC<BlogFormProps> = ({ blog }) => {
       </div>
       <button disabled={status==='loading'} type="submit">{blog?.id ?  status=== 'loading' ? "Updating..." : "Update" : status === "loading" ? "Submitting..." : "Submit"}</button>
       {error ? error.map((err)=><div>{`Error:${err.name}, ${err.message},\n${err.stack}`}</div>): null}
-      {status==='success'?<div>{`Uploaded Post, and ${images?.length??0} images. Return to `}<Link href="/admin">Dashboard</Link></div>:null}
+      {status==='success'?<div>{`Uploaded Post, and ${images?.length??0} images. Return to `}<Link href="/admin">Dashboard</Link></div>:status==='partial'?<div>{`Partially Uploaded Post, and ${error.length??0} images failed to upload. Return to `}<Link href="/admin">Dashboard</Link></div>:null}
     </form>
   );
 };
