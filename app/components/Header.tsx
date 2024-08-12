@@ -1,4 +1,5 @@
 import Link from "next/link";
+import AdminLink from "./AdminLink";
 
 export function Header({ isLoggedIn }:{isLoggedIn?:boolean}) {
   
@@ -13,9 +14,7 @@ export function Header({ isLoggedIn }:{isLoggedIn?:boolean}) {
           <Link href="/" className="text-sm text-black hover:underline">Home</Link>
           <Link href="/about" className="text-sm text-black hover:underline">About</Link>
           <Link href="/posts" className="text-sm text-black hover:underline">Posts</Link>
-          {isLoggedIn && (
-            <Link href="/admin" className="text-sm text-black hover:underline">Admin</Link>
-          )}
+            <AdminLink href="/admin" className="text-sm text-black hover:underline">Admin</AdminLink>
         </div>
       </div>
     </header>

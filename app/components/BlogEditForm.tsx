@@ -29,15 +29,17 @@ const BlogForm: React.FC<BlogFormProps> = ({ blog }) => {
   const [content, setContent] = useState(blog?.markdownContent || "");
   const [journalEntry, setJournalEntry] = useState(blog?.privateContent || "");
   const [images, setImages] = useState<File[] | null>(null);
+  const [isExistingThumbnail, setIsExistingThumbnail] = useState(true)
   const [thumbnail, setThumbnail] = useState<number | null>(null);
 
+  const existingImages = blog?.images || [];
   // Errors
   const [locationError, setLocationError] = useState("");
   const [error, setError] = useState<Error[]>([]);
-
+  
   // status
-  const [status, setStatus] = useState<null | "loading" | "success"|"partial">(null)
-
+  const [status, setStatus] = useState<null | "loading" | "success" | "partial">(null)
+  
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setStatus('loading')
@@ -61,7 +63,7 @@ const BlogForm: React.FC<BlogFormProps> = ({ blog }) => {
       | null
     )[] = [];
     let hasErrors = false;
-    const errors:Error[] = [];
+    const errors: Error[] = [];
     const promises = data.map(async ({ key, url }, i) => {
       if (images?.[i]) {
         try {
@@ -91,7 +93,7 @@ const BlogForm: React.FC<BlogFormProps> = ({ blog }) => {
       setStatus(null)
       // return;
     }
-
+    const newThumbnail = thumbnail && thumbnail < 0? existingImages?.[-thumbnail] :uploadedImages[thumbnail??0]
     // Prepare blog object
     const newBlog: Partial<Blog> = {
       ...blog,
@@ -107,7 +109,7 @@ const BlogForm: React.FC<BlogFormProps> = ({ blog }) => {
         ...(blog?.images || []),
         ...uploadedImages.filter((image) => !!image)
       ] as any,
-      thumbnail: uploadedImages[thumbnail ?? 0],
+      thumbnail: newThumbnail,
       privateContent: journalEntry,
     };
     try {
@@ -117,7 +119,7 @@ const BlogForm: React.FC<BlogFormProps> = ({ blog }) => {
         method: blog?.id ? "PUT" : "POST",
         data: newBlog,
       });
-      setStatus(errors.length && uploadedImages.length?'partial':'success')
+      setStatus(errors.length && uploadedImages.length ? 'partial' : 'success')
       console.log(blog?.id ? "Updated" : "Posted", " Blog", response.data);
       // router.push("/admin");
     } catch (error) {
@@ -145,6 +147,12 @@ const BlogForm: React.FC<BlogFormProps> = ({ blog }) => {
     }
   };
 
+const onThumbnailChange = (index:number, isExisting=false)=>{
+  setThumbnail(index)
+  setIsExistingThumbnail(isExisting)
+  console.log(`Existing ${isExisting}, now showing image ${index}`)
+}
+
   // Preview images before upload
   const imagePreviews = images?.map((image, index) => (
     <img
@@ -154,19 +162,36 @@ const BlogForm: React.FC<BlogFormProps> = ({ blog }) => {
       //   width={100}
       //   height={100}
       className="image-preview"
-      onClick={() => setThumbnail(index)}
+      onClick={() => onThumbnailChange(index)}
     />
   ));
 
+  // existing Images which were uploaded previously
+  const existingImagePreviews = blog?.images.map((image, index) => {
+    return (
+      <img
+        key={image.key}
+        src={getImageUrl(image)}
+        className="image-preview"
+        onClick={() => onThumbnailChange(index,true)}
+      />
+    );
+  })
+
   // Preview thumbnail before upload
-  const thumbnailPreview = thumbnail !== null && images && (
+  const thumbnailPreview = isExistingThumbnail?thumbnail!==null && existingImages &&
     <img
+      src={getImageUrl(existingImages[thumbnail])}
+      alt={`Selected Thumbnail Image`}
+      width={100}
+      height={100}
+    />:  thumbnail!==null && images && <img
       src={URL.createObjectURL(images[thumbnail])}
-      alt="Thumbnail Preview"
+      alt={`Selected Thumbnail Image`}
       width={100}
       height={100}
     />
-  );
+  ;
 
   return (
     <form className="blog-form" onSubmit={handleSubmit}>
@@ -269,21 +294,13 @@ const BlogForm: React.FC<BlogFormProps> = ({ blog }) => {
         <div>
           <p className="pseudo-label">Previously Uploaded</p>
           <div className="image-previews">
-            {blog.images.map((image) => {
-              return (
-                <img
-                  key={image.key}
-                  src={getImageUrl(image)}
-                  className="image-preview"
-                />
-              );
-            })}
+            {existingImagePreviews}
           </div>
         </div>
       ) : null}
       <div className="form-group">
         <label htmlFor="thumbnail">Thumbnail</label>
-        {thumbnailPreview}
+        {thumbnailPreview ?? null}
       </div>
       <div className="form-group">
         <label htmlFor="journalEntry">Private Journal Entry</label>
@@ -294,9 +311,9 @@ const BlogForm: React.FC<BlogFormProps> = ({ blog }) => {
           placeholder="Journal content - Private"
         ></textarea>
       </div>
-      <button disabled={status==='loading'} type="submit">{blog?.id ?  status=== 'loading' ? "Updating..." : "Update" : status === "loading" ? "Submitting..." : "Submit"}</button>
-      {error ? error.map((err)=><div>{`Error:${err.name}, ${err.message},\n${err.stack}`}</div>): null}
-      {status==='success'?<div>{`Uploaded Post, and ${images?.length??0} images. Return to `}<Link href="/admin">Dashboard</Link></div>:status==='partial'?<div>{`Partially Uploaded Post, and ${error.length??0} images failed to upload. Return to `}<Link href="/admin">Dashboard</Link></div>:null}
+      <button disabled={status === 'loading'} type="submit">{blog?.id ? status === 'loading' ? "Updating..." : "Update" : status === "loading" ? "Submitting..." : "Submit"}</button>
+      {error ? error.map((err) => <div>{`Error:${err.name}, ${err.message},\n${err.stack}`}</div>) : null}
+      {status === 'success' ? <div>{`Uploaded Post, and ${images?.length ?? 0} images. Return to `}<Link href="/admin">Dashboard</Link></div> : status === 'partial' ? <div>{`Partially Uploaded Post, and ${error.length ?? 0} images failed to upload. Return to `}<Link href="/admin">Dashboard</Link></div> : null}
     </form>
   );
 };

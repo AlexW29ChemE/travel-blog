@@ -1,6 +1,6 @@
 import React from "react";
 import db from "../../model/db";
-import "./dashboard/dashboard.modules.css";
+import "./dashboard.modules.css";
 import Link from "next/link";
 import axios from "axios";
 import PublishButton from "../../components/PublishButton";
